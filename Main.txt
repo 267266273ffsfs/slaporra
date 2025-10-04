@@ -13,15 +13,15 @@ local OrionLib = {
 	Connections = {},
 	Flags = {},
 	Themes = {
-		Default = {
-			Main = Color3.fromRGB(25, 25, 25),
-			Second = Color3.fromRGB(32, 32, 32),
-			Stroke = Color3.fromRGB(60, 60, 60),
-			Divider = Color3.fromRGB(60, 60, 60),
-			Text = Color3.fromRGB(240, 240, 240),
-			TextDark = Color3.fromRGB(150, 150, 150)
-		}
-	},
+	Default = {
+		Main = Color3.fromRGB(20, 20, 40),      -- fundo principal (azul escuro)
+		Second = Color3.fromRGB(30, 30, 70),    -- fundo secundário
+		Stroke = Color3.fromRGB(50, 90, 180),   -- borda azul
+		Divider = Color3.fromRGB(50, 90, 180),  -- divisores azuis
+		Text = Color3.fromRGB(220, 230, 255),   -- texto branco-azulado
+		TextDark = Color3.fromRGB(140, 160, 200) -- texto secundário
+	}
+},
 	SelectedTheme = "Default",
 	Folder = nil,
 	SaveCfg = false
@@ -114,18 +114,22 @@ local function AddDraggingFunctionality(DragPoint, Main)
 			end
 		end)
 		DragPoint.InputChanged:Connect(function(Input)
-			if Input.UserInputType == Enum.UserInputType.MouseMovement then
-				DragInput = Input
-			end
-		end)
-		UserInputService.InputChanged:Connect(function(Input)
-			if Input == DragInput and Dragging then
-				local Delta = Input.Position - MousePos
-				TweenService:Create(Main, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
-			end
-		end)
-	end)
-end   
+	if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
+		DragInput = Input
+	end
+end)
+UserInputService.InputChanged:Connect(function(Input)
+	if Input == DragInput and Dragging then
+		local Delta = Input.Position - MousePos
+		TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = UDim2.new(
+				FramePos.X.Scale, FramePos.X.Offset + Delta.X,
+				FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y
+			)
+		}):Play()
+	end
+end)
+
 
 local function Create(Name, Properties, Children)
 	local Object = Instance.new(Name)
